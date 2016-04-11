@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/CompanyREST.iml" filepath="$PROJECT_DIR$/CompanyREST.iml" />
+      <module fileurl="file://$PROJECT_DIR$/company-aspect/company-aspect.iml" filepath="$PROJECT_DIR$/company-aspect/company-aspect.iml" />
+      <module fileurl="file://$PROJECT_DIR$/company-controller/company-controller.iml" filepath="$PROJECT_DIR$/company-controller/company-controller.iml" />
+      <module fileurl="file://$PROJECT_DIR$/company-core/company-core.iml" filepath="$PROJECT_DIR$/company-core/company-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/company-dao/company-dao.iml" filepath="$PROJECT_DIR$/company-dao/company-dao.iml" />
+      <module fileurl="file://$PROJECT_DIR$/company-model/company-model.iml" filepath="$PROJECT_DIR$/company-model/company-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/company-service/company-service.iml" filepath="$PROJECT_DIR$/company-service/company-service.iml" />
+    </modules>
+  </component>
+</project>
