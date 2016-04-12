@@ -5,12 +5,14 @@ import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.service.interfaces.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by byaxe on 4/8/16.
  */
+@Service
 public class CompanyServiceImpl implements ICompanyService {
 
     @Autowired
@@ -37,8 +39,8 @@ public class CompanyServiceImpl implements ICompanyService {
     }
 
     @Override
-    public EmployeeEntity saveEmployee(final EmployeeEntity employee, final CompanyEntity company) {
-        return this.companyDAO.saveEmployee(employee, company);
+    public EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee) {
+        return this.companyDAO.saveEmployeeToCompany(company_id, employee);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.nvcm.controller;
 
 import net.nvcm.entities.CompanyEntity;
+import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.service.interfaces.ICompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -18,9 +19,6 @@ import java.util.List;
 @RestController
 @RequestMapping(method = RequestMethod.GET)
 public class CompanyController {
-/*
-    @Autowired
-    private IEmployeeService employeeService;*/
 
     @Autowired
     private ICompanyService companyService;
@@ -29,7 +27,7 @@ public class CompanyController {
     /**
      * Obtaining single company by id
      */
-    @RequestMapping(value = "/company/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = "/companies/{id}", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<CompanyEntity> getCompany(@PathVariable("id") final int id) {
         CompanyEntity company = companyService.getCompanyById(id);
 
@@ -42,7 +40,7 @@ public class CompanyController {
     /**
      * Obtaining list of all companies
      */
-    @RequestMapping(value = "/company")
+    @RequestMapping(value = "/companies")
     public ResponseEntity<List<CompanyEntity>> listAllCompanies() {
         List<CompanyEntity> companies = companyService.getCompaniesList();
 
@@ -55,7 +53,7 @@ public class CompanyController {
     /**
      * Saving company
      */
-    @RequestMapping(value = "/company/", method = RequestMethod.POST)
+    @RequestMapping(value = "/companies/", method = RequestMethod.POST)
     public ResponseEntity<Void> createCompany(@RequestBody CompanyEntity company, UriComponentsBuilder builder) {
         if (companyService.isCompanyExist(company)) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
@@ -63,7 +61,7 @@ public class CompanyController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setLocation(builder.path("/company/{id}").buildAndExpand(company.getId()).toUri());
+        headers.setLocation(builder.path("/companies/{id}").buildAndExpand(company.getId()).toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
@@ -71,7 +69,7 @@ public class CompanyController {
     /**
      * Removing company
      */
-    @RequestMapping(value = "/user/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/companies/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<CompanyEntity> deleteCompany(@PathVariable("id") final int id) {
         CompanyEntity company = companyService.getCompanyById(id);
 
@@ -80,6 +78,37 @@ public class CompanyController {
         companyService.removeCompany(id);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    /**
+     * Obtain employee's list of given company
+     */
+    @RequestMapping(value = "/companies/{id}/employees")
+    public ResponseEntity<List<EmployeeEntity>> listAllEmployeesInCompany(@PathVariable("id") final int id) {
+        List<EmployeeEntity> employeeList = companyService.getEmployeesListById(id);
+
+        if (employeeList.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(employeeList, HttpStatus.OK);
+    }
+
+
+    /**
+     * Add employee to company
+     */
+    @RequestMapping(value = "/companies/{company_id}/employees", method = RequestMethod.PUT)
+    public ResponseEntity<EmployeeEntity> addEmployeeToCompany(
+            @PathVariable("company_id") final int company_id,
+            @RequestBody EmployeeEntity employee, UriComponentsBuilder builder) {
+
+        companyService.saveEmployeeToCompany(company_id, employee);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setLocation(builder.path("/companies/{companies_id}/employees/{employees_id}")
+                .buildAndExpand(employee.getId()).toUri());
+
+        return new ResponseEntity<>(headers, HttpStatus.OK);
     }
 
 }

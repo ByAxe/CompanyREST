@@ -18,7 +18,7 @@ public interface ICompanyService {
 
     CompanyEntity saveCompany(final CompanyEntity company);
 
-    EmployeeEntity saveEmployee(final EmployeeEntity employee, final CompanyEntity company);
+    EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee);
 
     CompanyEntity removeCompany(final int id);
 

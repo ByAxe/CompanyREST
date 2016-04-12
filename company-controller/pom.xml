@@ -10,14 +10,37 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<artifactId>company-controller</artifactId>
-	<packaging>pom</packaging>
+	<packaging>war</packaging>
 
 	<dependencies>
+		<!--TODO is it necessary here?-->
+
+		<!--Internal dependencies-->
 		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>2.7.3</version>
+			<groupId>net.nvcm.company</groupId>
+			<artifactId>company-model</artifactId>
+			<version>1.0-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>net.nvcm.company</groupId>
+			<artifactId>company-service</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<!-- WEB -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>4.0.0-b01</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax</groupId>
+			<artifactId>javaee-web-api</artifactId>
+			<version>7.0</version>
+		</dependency>
+
 	</dependencies>
 
 </project>

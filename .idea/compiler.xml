@@ -22,8 +22,10 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="company-controller" />
         <module name="company-core" />
         <module name="company-dao" />
+        <module name="company-model" />
         <module name="company-service" />
       </profile>
     </annotationProcessing>

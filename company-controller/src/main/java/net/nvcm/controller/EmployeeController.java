@@ -1,5 +1,6 @@
 package net.nvcm.controller;
 
+import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.service.interfaces.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +22,10 @@ public class EmployeeController {
     @Autowired
     private IEmployeeService employeeService;
 
-/*    @Autowired
-    private ICompanyService companyService;*/
-
-
     /**
      * Obtaining single employee by id
      */
-    @RequestMapping(value = "/employee/{id}")
+    @RequestMapping(value = "/employees/{id}", method = RequestMethod.GET)
     public ResponseEntity<EmployeeEntity> getEmployee(@PathVariable("id") final int id) {
         EmployeeEntity employee = employeeService.getEmployeeById(id);
 
@@ -40,7 +37,7 @@ public class EmployeeController {
     /**
      * Obtaining list of all employees
      */
-    @RequestMapping(value = "/employee")
+    @RequestMapping(value = "/employees")
     public ResponseEntity<List<EmployeeEntity>> listAllEmployees() {
         List<EmployeeEntity> employees = employeeService.getEmployeeList();
 
@@ -53,7 +50,7 @@ public class EmployeeController {
     /**
      * Saving employee
      */
-    @RequestMapping(value = "/employee/", method = RequestMethod.POST)
+    @RequestMapping(value = "/employees/", method = RequestMethod.POST)
     public ResponseEntity<Void> createEmployee(@RequestBody EmployeeEntity employee, UriComponentsBuilder builder) {
 
         if (employeeService.isEmployeeExist(employee)) return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -62,7 +59,7 @@ public class EmployeeController {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setLocation(builder.path("/employee/{id}").buildAndExpand(employee.getId()).toUri());
+        headers.setLocation(builder.path("/employees/{id}").buildAndExpand(employee.getId()).toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
@@ -70,7 +67,7 @@ public class EmployeeController {
     /**
      * Removing employee
      */
-    @RequestMapping(value = "/employee/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/employees/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<EmployeeEntity> deleteEmployee(@PathVariable("id") final int id) {
         EmployeeEntity employee = employeeService.getEmployeeById(id);
 
@@ -81,5 +78,34 @@ public class EmployeeController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    /**
+     * Obtain company's list of given employee
+     */
+    @RequestMapping(value = "/employees/{id}/companies", method = RequestMethod.GET)
+    public ResponseEntity<List<CompanyEntity>> listAllCompaniesInEmployee(@PathVariable("id") final int id) {
+        List<CompanyEntity> companyList = employeeService.getCompaniesListById(id);
+
+        if (companyList.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+        return new ResponseEntity<>(companyList, HttpStatus.OK);
+    }
+
+    /**
+     * Add company to employee
+     */
+    @RequestMapping(value = "/employees/{employee_id}/companies", method = RequestMethod.PUT)
+    public ResponseEntity<CompanyEntity> addCompanyToEmployee(
+            @PathVariable("employee_id") final int employee_id,
+            @RequestBody CompanyEntity company, UriComponentsBuilder builder) {
+
+        employeeService.saveCompanyToEmployee(employee_id, company);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setLocation(builder.path("/employees/{employee_id}/companies/{company_id}")
+                .buildAndExpand(company.getId()).toUri());
+
+        return new ResponseEntity<>(headers, HttpStatus.OK);
+    }
 
 }

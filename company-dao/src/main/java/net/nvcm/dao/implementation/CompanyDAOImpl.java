@@ -46,13 +46,16 @@ public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
 
     @Override
     @Transactional
-    public EmployeeEntity saveEmployee(final EmployeeEntity employee, final CompanyEntity company) {
-        Set<EmployeeEntity> newEmployees = company.getEmployees();
+    public EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee) {
+        CompanyEntity company = getCompanyById(company_id);
 
-        newEmployees.add(employee);
+        Set<EmployeeEntity> employees = company.getEmployees();
 
-        company.setEmployees(newEmployees);
+        employees.add(employee);
 
+        company.setEmployees(employees);
+
+        /*TODO brave-new company?*/
         entityManager.persist(company);
 
         return employee;

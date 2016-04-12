@@ -18,6 +18,7 @@
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/company-aspect/pom.xml" />
         <option value="$PROJECT_DIR$/company-model/company-entity/pom.xml" />
       </set>
     </option>

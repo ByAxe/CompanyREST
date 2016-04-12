@@ -10,13 +10,15 @@ import java.util.List;
  */
 public interface IEmployeeDAO {
 
+    List<EmployeeEntity> getEmployeeList();
+
     EmployeeEntity getEmployeeById(final int id);
 
-    List<EmployeeEntity> getEmployeeList();
+    List<CompanyEntity> getCompaniesListById(final int id);
 
     EmployeeEntity saveEmployee(final EmployeeEntity employee);
 
-    CompanyEntity saveCompany(final CompanyEntity company, final EmployeeEntity employee);
+    CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyEntity company);
 
     EmployeeEntity removeEmployee(final int id);
 

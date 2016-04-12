@@ -30,6 +30,13 @@ public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO 
     }
 
     @Override
+    public List<CompanyEntity> getCompaniesListById(final int id) {
+        return entityManager.createQuery("SELECT c FROM CompaniesEntity c JOIN" +
+                " c.employees e WHERE e.id = :id", CompanyEntity.class).setParameter("id", id)
+                .getResultList();
+    }
+
+    @Override
     @Transactional
     public EmployeeEntity saveEmployee(final EmployeeEntity employee) {
         entityManager.persist(employee);
@@ -38,13 +45,17 @@ public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO 
 
     @Override
     @Transactional
-    public CompanyEntity saveCompany(final CompanyEntity company, final EmployeeEntity employee) {
-        Set<CompanyEntity> newCompanies = employee.getCompanies();
+    public CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyEntity company) {
 
-        newCompanies.add(company);
+        EmployeeEntity employee = this.getEmployeeById(employee_id);
 
-        employee.setCompanies(newCompanies);
+        Set<CompanyEntity> companies = employee.getCompanies();
 
+        companies.add(company);
+
+        employee.setCompanies(companies);
+
+        /*TODO brave-new employee?*/
         entityManager.persist(employee);
 
         return company;
