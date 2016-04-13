@@ -1,9 +1,11 @@
 package net.nvcm.dao.implementation;
 
 import net.nvcm.dao.GenericAbstractDAO;
+import net.nvcm.dao.interfaces.ICompanyDAO;
 import net.nvcm.dao.interfaces.IEmployeeDAO;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,9 @@ import java.util.Set;
 @Repository
 @Transactional(readOnly = true)
 public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO {
+
+    @Autowired
+    private ICompanyDAO companyDAO;
 
     @Override
     public EmployeeEntity getEmployeeById(final int id) {
@@ -30,9 +35,9 @@ public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO 
     }
 
     @Override
-    public List<CompanyEntity> getCompaniesListById(final int id) {
-        return entityManager.createQuery("SELECT c FROM CompaniesEntity c JOIN" +
-                " c.employees e WHERE e.id = :id", CompanyEntity.class).setParameter("id", id)
+    public List<EmployeeEntity> getEmployeesListById(final int id) {
+        return entityManager.createQuery("SELECT e FROM EmployeeEntity e JOIN" +
+                " e.companies c WHERE c.id = :id", EmployeeEntity.class).setParameter("id", id)
                 .getResultList();
     }
 
@@ -45,20 +50,18 @@ public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO 
 
     @Override
     @Transactional
-    public CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyEntity company) {
+    public EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee) {
+        CompanyEntity company = companyDAO.getCompanyById(company_id);
 
-        EmployeeEntity employee = this.getEmployeeById(employee_id);
+        Set<EmployeeEntity> employees = company.getEmployees();
 
-        Set<CompanyEntity> companies = employee.getCompanies();
+        employees.add(employee);
 
-        companies.add(company);
+        company.setEmployees(employees);
 
-        employee.setCompanies(companies);
+        entityManager.persist(company);
 
-        /*TODO brave-new employee?*/
-        entityManager.persist(employee);
-
-        return company;
+        return employee;
     }
 
     @Override

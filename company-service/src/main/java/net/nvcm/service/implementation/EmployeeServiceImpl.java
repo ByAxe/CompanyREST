@@ -1,5 +1,7 @@
 package net.nvcm.service.implementation;
 
+import net.nvcm.core.dto.EmployeeDTOFull;
+import net.nvcm.dao.interfaces.ICompanyDAO;
 import net.nvcm.dao.interfaces.IEmployeeDAO;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
@@ -7,7 +9,11 @@ import net.nvcm.service.interfaces.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static net.nvcm.service.EmployeeTransformer.transformEmployeeDTOToEntity;
+import static net.nvcm.service.EmployeeTransformer.transformEmployeeEntityToDTO;
 
 /**
  * Created by byaxe on 4/8/16.
@@ -16,40 +22,60 @@ import java.util.List;
 public class EmployeeServiceImpl implements IEmployeeService {
 
     @Autowired
+    private ICompanyDAO companyDAO;
+
+    @Autowired
     private IEmployeeDAO employeeDAO;
 
     @Override
-    public EmployeeEntity getEmployeeById(final int id) {
-        return this.employeeDAO.getEmployeeById(id);
+    public List<EmployeeDTOFull> getEmployeeList() {
+        List<EmployeeDTOFull> transformedList = new ArrayList<>();
+
+        for (EmployeeEntity employee : employeeDAO.getEmployeeList()) {
+            transformedList.add(transformEmployeeEntityToDTO(employee));
+        }
+
+        return transformedList;
     }
 
     @Override
-    public List<EmployeeEntity> getEmployeeList() {
-        return this.employeeDAO.getEmployeeList();
+    public EmployeeDTOFull getEmployeeById(final int id) {
+        return transformEmployeeEntityToDTO(employeeDAO.getEmployeeById(id));
     }
 
     @Override
-    public List<CompanyEntity> getCompaniesListById(final int id) {
-        return this.employeeDAO.getCompaniesListById(id);
+    public List<EmployeeDTOFull> getEmployeesListById(final int id) {
+        CompanyEntity targetCompany = companyDAO.getCompanyById(id);
+
+        List<EmployeeDTOFull> employeesDTOList = new ArrayList<>();
+
+        for (EmployeeEntity employee : targetCompany.getEmployees()) {
+            employeesDTOList.add(transformEmployeeEntityToDTO(employee));
+        }
+
+        return employeesDTOList;
     }
 
     @Override
-    public EmployeeEntity saveEmployee(final EmployeeEntity employee) {
-        return this.employeeDAO.saveEmployee(employee);
+    public EmployeeDTOFull saveEmployee(final EmployeeDTOFull employee) {
+        employeeDAO.saveEmployee(transformEmployeeDTOToEntity(employee));
+        return employee;
     }
 
     @Override
-    public CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyEntity company) {
-        return this.employeeDAO.saveCompanyToEmployee(employee_id, company);
+    public EmployeeDTOFull saveEmployeeToCompany(final int company_id, final EmployeeDTOFull employee) {
+        return null;
     }
 
     @Override
-    public EmployeeEntity removeEmployee(final int id) {
-        return this.employeeDAO.removeEmployee(id);
+    public EmployeeDTOFull removeEmployee(final int id) {
+        employeeDAO.removeEmployee(id);
+
+        return getEmployeeById(id);
     }
 
     @Override
-    public boolean isEmployeeExist(final EmployeeEntity employee) {
-        return this.employeeDAO.isEmployeeExist(employee);
+    public boolean isEmployeeExist(final EmployeeDTOFull employee) {
+        return employeeDAO.isEmployeeExist(transformEmployeeDTOToEntity(employee));
     }
 }

@@ -35,15 +35,18 @@
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-entitymanager:5.1.0.Final" />
           <element id="library" level="project" name="Maven: org.hibernate:hibernate-envers:5.1.0.Final" />
           <element id="library" level="project" name="Maven: org.postgresql:postgresql:9.4.1208.jre7" />
+          <element id="archive" name="company-core-1.0-SNAPSHOT.jar">
+            <element id="module-output" name="company-core" />
+          </element>
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.3" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" />
+          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.3" />
           <element id="archive" name="company-service-1.0-SNAPSHOT.jar">
             <element id="module-output" name="company-service" />
           </element>
           <element id="archive" name="company-dao-1.0-SNAPSHOT.jar">
             <element id="module-output" name="company-dao" />
           </element>
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.7.3" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" />
-          <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.3" />
           <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.2.5.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-jpa:1.10.1.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework.data:spring-data-commons:1.12.1.RELEASE" />

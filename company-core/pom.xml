@@ -13,13 +13,6 @@
 
 	<dependencies>
 
-		<!--Internal dependencies-->
-		<dependency>
-			<groupId>net.nvcm.company</groupId>
-			<artifactId>company-dao</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
-
 		<!-- Jackson -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

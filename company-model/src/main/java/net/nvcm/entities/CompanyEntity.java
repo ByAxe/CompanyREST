@@ -20,6 +20,14 @@ public class CompanyEntity extends AbstractEntity implements Serializable {
     private CompanyEntity parent;
     private Set<CompanyEntity> children = new HashSet<>();
 
+    public CompanyEntity() {
+    }
+
+    public CompanyEntity(String title, String slogan) {
+        this.title = title;
+        this.slogan = slogan;
+    }
+
     @Column(name = "title")
     public String getTitle() {
         return title;

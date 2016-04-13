@@ -1,7 +1,7 @@
 package net.nvcm.service.interfaces;
 
+import net.nvcm.core.dto.CompanyDTOFull;
 import net.nvcm.entities.CompanyEntity;
-import net.nvcm.entities.EmployeeEntity;
 
 import java.util.List;
 
@@ -10,17 +10,17 @@ import java.util.List;
  */
 public interface ICompanyService {
 
-    List<CompanyEntity> getCompaniesList();
+    List<CompanyDTOFull> getCompaniesList();
 
-    CompanyEntity getCompanyById(final int id);
+    CompanyDTOFull getCompanyById(final int id);
 
-    List<EmployeeEntity> getEmployeesListById(final int id);
+    List<CompanyDTOFull> getCompaniesListById(final int id);
 
-    CompanyEntity saveCompany(final CompanyEntity company);
+    CompanyDTOFull saveCompany(final CompanyDTOFull company);
 
-    EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee);
+    CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyDTOFull company);
 
-    CompanyEntity removeCompany(final int id);
+    CompanyDTOFull removeCompany(final int id);
 
-    boolean isCompanyExist(final CompanyEntity company);
+    boolean isCompanyExist(final CompanyDTOFull company);
 }

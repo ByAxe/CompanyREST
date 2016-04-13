@@ -18,6 +18,16 @@ public class EmployeeEntity extends AbstractEntity implements Serializable {
     private int age;
     private Set<CompanyEntity> companies = new HashSet<>();
 
+    public EmployeeEntity() {
+    }
+
+    public EmployeeEntity(String name, String position, String sex, int age) {
+        this.name = name;
+        this.position = position;
+        this.sex = sex;
+        this.age = age;
+    }
+
     @Column(name = "name")
     public String getName() {
         return name;

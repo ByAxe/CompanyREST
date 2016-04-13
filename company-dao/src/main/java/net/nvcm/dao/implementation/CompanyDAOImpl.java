@@ -2,8 +2,10 @@ package net.nvcm.dao.implementation;
 
 import net.nvcm.dao.GenericAbstractDAO;
 import net.nvcm.dao.interfaces.ICompanyDAO;
+import net.nvcm.dao.interfaces.IEmployeeDAO;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,10 +15,13 @@ import java.util.Set;
 /**
  * Created by byaxe on 4/8/16.
  */
-
 @Repository
 @Transactional(readOnly = true)
 public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
+
+    /*TODO is it good?*/
+    @Autowired
+    private IEmployeeDAO employeeDAO;
 
     @Override
     public List<CompanyEntity> getCompaniesList() {
@@ -30,10 +35,11 @@ public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
                 CompanyEntity.class).setParameter("id", id).getSingleResult();
     }
 
+
     @Override
-    public List<EmployeeEntity> getEmployeesListById(final int id) {
-        return entityManager.createQuery("SELECT e FROM EmployeeEntity e JOIN" +
-                " e.companies c WHERE c.id = :id", EmployeeEntity.class).setParameter("id", id)
+    public List<CompanyEntity> getCompaniesListById(final int id) {
+        return entityManager.createQuery("SELECT c FROM CompaniesEntity c JOIN" +
+                " c.employees e WHERE e.id = :id", CompanyEntity.class).setParameter("id", id)
                 .getResultList();
     }
 
@@ -46,19 +52,19 @@ public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
 
     @Override
     @Transactional
-    public EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee) {
-        CompanyEntity company = getCompanyById(company_id);
+    public CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyEntity company) {
 
-        Set<EmployeeEntity> employees = company.getEmployees();
+        EmployeeEntity employee = employeeDAO.getEmployeeById(employee_id);
 
-        employees.add(employee);
+        Set<CompanyEntity> companies = employee.getCompanies();
 
-        company.setEmployees(employees);
+        companies.add(company);
 
-        /*TODO brave-new company?*/
-        entityManager.persist(company);
+        employee.setCompanies(companies);
 
-        return employee;
+        entityManager.persist(employee);
+
+        return company;
     }
 
     @Override

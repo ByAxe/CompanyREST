@@ -1,6 +1,5 @@
 package net.nvcm.dao.interfaces;
 
-import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 
 import java.util.List;
@@ -14,11 +13,11 @@ public interface IEmployeeDAO {
 
     EmployeeEntity getEmployeeById(final int id);
 
-    List<CompanyEntity> getCompaniesListById(final int id);
+    List<EmployeeEntity> getEmployeesListById(final int id);
 
     EmployeeEntity saveEmployee(final EmployeeEntity employee);
 
-    CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyEntity company);
+    EmployeeEntity saveEmployeeToCompany(final int company_id, final EmployeeEntity employee);
 
     EmployeeEntity removeEmployee(final int id);
 

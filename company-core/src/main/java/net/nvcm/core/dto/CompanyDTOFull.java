@@ -1,28 +1,22 @@
 package net.nvcm.core.dto;
 
-import org.springframework.stereotype.Component;
-
 /**
  * Created by byaxe on 4/12/16.
  */
-@Component
-public class CompanyDTO {
-/*
+public class CompanyDTOFull {
 
     private int id;
     private String title;
     private String slogan;
-    private Set<EmployeeEntity> employees = new HashSet<>();
 
-    public CompanyDTO() {
+    public CompanyDTOFull() {
 
     }
 
-    public CompanyDTO(int id, String title, String slogan, Set<EmployeeEntity> employees) {
+    public CompanyDTOFull(int id, String title, String slogan) {
         this.id = id;
         this.title = title;
         this.slogan = slogan;
-        this.employees = employees;
     }
 
     public int getId() {
@@ -48,13 +42,4 @@ public class CompanyDTO {
     public void setSlogan(String slogan) {
         this.slogan = slogan;
     }
-
-    public Set<EmployeeEntity> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Set<EmployeeEntity> employees) {
-        this.employees = employees;
-    }
-*/
 }
