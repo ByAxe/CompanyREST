@@ -7,8 +7,11 @@ import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +34,7 @@ public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
 
     @Override
     public CompanyEntity getCompanyById(final int id) {
-        return entityManager.createQuery("SELECT c FROM CompanyEntity c WHERE id = :id",
+        return entityManager.createQuery("SELECT c FROM CompanyEntity c WHERE c.id = :id",
                 CompanyEntity.class).setParameter("id", id).getSingleResult();
     }
 
@@ -70,9 +73,9 @@ public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
     @Override
     @Transactional
     public CompanyEntity removeCompany(final int id) {
-        CompanyEntity removedCompany = entityManager
-                .createQuery("SELECT c FROM CompanyEntity c WHERE id = :id",
-                        CompanyEntity.class).setParameter("id", id).getSingleResult();
+        CompanyEntity removedCompany = entityManager.createQuery("SELECT c FROM CompanyEntity c" +
+                " WHERE c.id = :id", CompanyEntity.class)
+                .setParameter("id", id).getSingleResult();
 
         entityManager.remove(removedCompany);
 
@@ -81,11 +84,20 @@ public class CompanyDAOImpl extends GenericAbstractDAO implements ICompanyDAO {
     }
 
     @Override
-    public boolean isCompanyExist(final CompanyEntity company) {
-        return entityManager.createQuery("SELECT c FROM CompanyEntity c" +
-                " WHERE c.title = :title AND c.employees = :employees", CompanyEntity.class)
-                .setParameter("title", company.getTitle())
-                .setParameter("employees", company.getEmployees())
-                .getResultList() != null;
+    public boolean isCompanyExist(final String title) {
+        CompanyEntity company = null;
+
+        TypedQuery<CompanyEntity> typedQuery = entityManager.createQuery("SELECT c FROM CompanyEntity c" +
+                " WHERE c.title = :title", CompanyEntity.class);
+
+        typedQuery.setParameter("title", title);
+
+        try {
+            company = typedQuery.getSingleResult();
+        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+        }
+
+        return company != null;
     }
 }

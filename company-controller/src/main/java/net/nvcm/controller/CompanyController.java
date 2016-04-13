@@ -2,7 +2,6 @@ package net.nvcm.controller;
 
 import net.nvcm.core.dto.CompanyDTOFull;
 import net.nvcm.core.dto.EmployeeDTOFull;
-import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.service.interfaces.ICompanyService;
 import net.nvcm.service.interfaces.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,9 @@ public class CompanyController {
 
         headers.setLocation(builder.path("/companies/{id}").buildAndExpand(company.getId()).toUri());
 
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        ResponseEntity<Void> responseEntity = new ResponseEntity<>(headers, HttpStatus.CREATED);
+
+        return responseEntity;
     }
 
     /**
@@ -100,7 +101,7 @@ public class CompanyController {
      * Adding employee to company
      */
     @RequestMapping(value = "/companies/{company_id}/employees", method = RequestMethod.PUT)
-    public ResponseEntity<EmployeeEntity> addEmployeeToCompany(
+    public ResponseEntity<EmployeeDTOFull> addEmployeeToCompany(
             @PathVariable("company_id") final int company_id,
             @RequestBody EmployeeDTOFull employee, UriComponentsBuilder builder) {
 

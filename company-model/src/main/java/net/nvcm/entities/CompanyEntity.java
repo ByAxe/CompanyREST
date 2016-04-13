@@ -28,6 +28,14 @@ public class CompanyEntity extends AbstractEntity implements Serializable {
         this.slogan = slogan;
     }
 
+/*    @Override
+    @Id
+    @SequenceGenerator(name = "company_seq", sequenceName = "companies_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_seq")
+    public Integer getId() {
+        return super.getId();
+    }*/
+
     @Column(name = "title")
     public String getTitle() {
         return title;

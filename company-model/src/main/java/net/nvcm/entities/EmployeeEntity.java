@@ -27,6 +27,13 @@ public class EmployeeEntity extends AbstractEntity implements Serializable {
         this.sex = sex;
         this.age = age;
     }
+/*    @Override
+    @Id
+    @SequenceGenerator(name = "employee_seq", sequenceName = "employees_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_seq")
+    public Integer getId() {
+        return super.getId();
+    }*/
 
     @Column(name = "name")
     public String getName() {

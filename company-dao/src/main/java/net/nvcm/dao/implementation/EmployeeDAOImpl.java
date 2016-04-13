@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Set;
 
@@ -24,7 +25,7 @@ public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO 
 
     @Override
     public EmployeeEntity getEmployeeById(final int id) {
-        return entityManager.createQuery("SELECT e FROM EmployeeEntity e WHERE id = :id",
+        return entityManager.createQuery("SELECT e FROM EmployeeEntity e WHERE e.id = :id",
                 EmployeeEntity.class).setParameter("id", id).getSingleResult();
     }
 
@@ -80,15 +81,24 @@ public class EmployeeDAOImpl extends GenericAbstractDAO implements IEmployeeDAO 
     /*TODO may not work*/
     @Override
     public boolean isEmployeeExist(final EmployeeEntity employee) {
-        return entityManager.createQuery("SELECT e FROM EmployeeEntity e" +
+        EmployeeEntity ourEmployee = null;
+
+        TypedQuery<EmployeeEntity> typedQuery = entityManager.createQuery("SELECT e FROM EmployeeEntity e" +
                 " WHERE e.name = :name AND e.position = :position" +
-                " AND e.sex = :sex AND e.age = :age" +
-                " AND e.companies = :companies", EmployeeEntity.class)
-                .setParameter("name", employee.getName())
+                " AND e.sex = :sex AND e.age = :age", EmployeeEntity.class);
+
+
+        typedQuery.setParameter("name", employee.getName())
                 .setParameter("position", employee.getPosition())
                 .setParameter("sex", employee.getSex())
-                .setParameter("age", employee.getAge())
-                .setParameter("companies", employee.getCompanies())
-                .getSingleResult() != null;
+                .setParameter("age", employee.getAge());
+
+        try {
+            ourEmployee = typedQuery.getSingleResult();
+        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+        }
+
+        return ourEmployee != null;
     }
 }

@@ -6,6 +6,8 @@ import net.nvcm.dao.interfaces.IEmployeeDAO;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.service.interfaces.ICompanyService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class CompanyServiceImpl implements ICompanyService {
 
     @Autowired
     private IEmployeeDAO employeeDAO;
+
+    private final Logger logger = LogManager.getLogger("log4j2.xml");
 
     @Override
     public List<CompanyDTOFull> getCompaniesList() {
@@ -57,7 +61,8 @@ public class CompanyServiceImpl implements ICompanyService {
 
     @Override
     public CompanyDTOFull saveCompany(final CompanyDTOFull company) {
-        companyDAO.saveCompany(transformCompanyDTOToEntity(company));
+        CompanyEntity companyEntity = transformCompanyDTOToEntity(company);
+        companyDAO.saveCompany(companyEntity);
         return company;
     }
 
@@ -75,6 +80,6 @@ public class CompanyServiceImpl implements ICompanyService {
 
     @Override
     public boolean isCompanyExist(final CompanyDTOFull company) {
-        return companyDAO.isCompanyExist(transformCompanyDTOToEntity(company));
+        return companyDAO.isCompanyExist(company.getTitle());
     }
 }

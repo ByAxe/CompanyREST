@@ -64,7 +64,9 @@ public class EmployeeController {
 
         headers.setLocation(builder.path("/employees/{id}").buildAndExpand(employee.getId()).toUri());
 
-        return new ResponseEntity<>(headers, HttpStatus.CREATED);
+        ResponseEntity<Void> responseEntity = new ResponseEntity<>(headers, HttpStatus.CREATED);
+
+        return responseEntity;
     }
 
     /**

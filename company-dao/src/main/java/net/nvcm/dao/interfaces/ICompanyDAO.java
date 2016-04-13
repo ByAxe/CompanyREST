@@ -21,5 +21,5 @@ public interface ICompanyDAO {
 
     CompanyEntity removeCompany(final int id);
 
-    boolean isCompanyExist(final CompanyEntity company);
+    boolean isCompanyExist(final String title);
 }
