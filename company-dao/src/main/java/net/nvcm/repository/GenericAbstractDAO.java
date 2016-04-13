@@ -1,4 +1,4 @@
-package net.nvcm.dao;
+package net.nvcm.repository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

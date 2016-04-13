@@ -59,5 +59,10 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-orm:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:4.2.5.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.aspectj:aspectjrt:1.8.9" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-rest-webmvc:2.5.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.data:spring-data-rest-core:2.5.1.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.hateoas:spring-hateoas:0.19.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.plugin:spring-plugin-core:1.2.0.RELEASE" level="project" />
+    <orderEntry type="library" name="Maven: org.atteo:evo-inflector:1.2.1" level="project" />
   </component>
 </module>

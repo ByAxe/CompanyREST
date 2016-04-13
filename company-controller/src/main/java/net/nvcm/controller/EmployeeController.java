@@ -56,7 +56,7 @@ public class EmployeeController {
     @RequestMapping(value = "/employees/", method = RequestMethod.POST)
     public ResponseEntity<Void> createEmployee(@RequestBody EmployeeDTOFull employee, UriComponentsBuilder builder) {
 
-        if (employeeService.isEmployeeExist(employee)) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        if (employeeService.isExist(employee)) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         employeeService.saveEmployee(employee);
 

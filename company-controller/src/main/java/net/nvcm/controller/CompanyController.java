@@ -57,7 +57,7 @@ public class CompanyController {
      */
     @RequestMapping(value = "/companies/", method = RequestMethod.POST)
     public ResponseEntity<Void> createCompany(@RequestBody CompanyDTOFull company, UriComponentsBuilder builder) {
-        if (companyService.isCompanyExist(company)) return new ResponseEntity<>(HttpStatus.CONFLICT);
+        if (companyService.isExist(company)) return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         companyService.saveCompany(company);
 

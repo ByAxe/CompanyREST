@@ -21,6 +21,6 @@ public interface IEmployeeService {
 
     EmployeeDTOFull removeEmployee(final int id);
 
-    boolean isEmployeeExist(final EmployeeDTOFull employee);
+    boolean isExist(final EmployeeDTOFull employee);
 
 }

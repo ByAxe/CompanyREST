@@ -1,13 +1,11 @@
 package net.nvcm.service.implementation;
 
 import net.nvcm.core.dto.CompanyDTOFull;
-import net.nvcm.dao.interfaces.ICompanyDAO;
-import net.nvcm.dao.interfaces.IEmployeeDAO;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
+import net.nvcm.repository.interfaces.ICompanyRepository;
+import net.nvcm.repository.interfaces.IEmployeeRepository;
 import net.nvcm.service.interfaces.ICompanyService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,19 +22,19 @@ import static net.nvcm.service.CompanyTransformer.transformCompanyEntityToDTO;
 public class CompanyServiceImpl implements ICompanyService {
 
     @Autowired
-    private ICompanyDAO companyDAO;
+    private ICompanyRepository companyRepository;
 
     @Autowired
-    private IEmployeeDAO employeeDAO;
-
-    private final Logger logger = LogManager.getLogger("log4j2.xml");
+    private IEmployeeRepository employeeRepository;
 
     @Override
     public List<CompanyDTOFull> getCompaniesList() {
         List<CompanyDTOFull> transformedList = new ArrayList<>();
 
-        for (CompanyEntity company : companyDAO.getCompaniesList()) {
-            transformedList.add(transformCompanyEntityToDTO(company));
+        for (CompanyEntity company : companyRepository.findAll()) {
+            CompanyDTOFull companyDTO = transformCompanyEntityToDTO(company);
+
+            transformedList.add(companyDTO);
         }
 
         return transformedList;
@@ -44,17 +42,19 @@ public class CompanyServiceImpl implements ICompanyService {
 
     @Override
     public CompanyDTOFull getCompanyById(final int id) {
-        return transformCompanyEntityToDTO(companyDAO.getCompanyById(id));
+        return transformCompanyEntityToDTO(companyRepository.findOne(id));
     }
 
     @Override
     public List<CompanyDTOFull> getCompaniesListById(final int id) {
-        EmployeeEntity targetEmployee = employeeDAO.getEmployeeById(id);
+        EmployeeEntity targetEmployee = employeeRepository.findOne(id);
 
         List<CompanyDTOFull> companyDTOList = new ArrayList<>();
 
         for (CompanyEntity company : targetEmployee.getCompanies()) {
-            companyDTOList.add(transformCompanyEntityToDTO(company));
+            CompanyDTOFull companyDTO = transformCompanyEntityToDTO(company);
+
+            companyDTOList.add(companyDTO);
         }
         return companyDTOList;
     }
@@ -62,10 +62,11 @@ public class CompanyServiceImpl implements ICompanyService {
     @Override
     public CompanyDTOFull saveCompany(final CompanyDTOFull company) {
         CompanyEntity companyEntity = transformCompanyDTOToEntity(company);
-        companyDAO.saveCompany(companyEntity);
+        companyRepository.save(companyEntity);
         return company;
     }
 
+    /*TODO implement it*/
     @Override
     public CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyDTOFull company) {
         return null;
@@ -73,13 +74,13 @@ public class CompanyServiceImpl implements ICompanyService {
 
     @Override
     public CompanyDTOFull removeCompany(final int id) {
-        companyDAO.removeCompany(id);
+        companyRepository.delete(id);
 
         return getCompanyById(id);
     }
 
     @Override
-    public boolean isCompanyExist(final CompanyDTOFull company) {
-        return companyDAO.isCompanyExist(company.getTitle());
+    public boolean isExist(final CompanyDTOFull company) {
+        return companyRepository.isExist(company.getTitle());
     }
 }

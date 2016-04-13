@@ -1,8 +1,8 @@
 package net.nvcm.service.implementation;
 
 import net.nvcm.core.dto.EmployeeDTOFull;
-import net.nvcm.dao.interfaces.ICompanyDAO;
-import net.nvcm.dao.interfaces.IEmployeeDAO;
+import net.nvcm.repository.interfaces.ICompanyRepository;
+import net.nvcm.repository.interfaces.IEmployeeRepository;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.service.interfaces.IEmployeeService;
@@ -22,17 +22,19 @@ import static net.nvcm.service.EmployeeTransformer.transformEmployeeEntityToDTO;
 public class EmployeeServiceImpl implements IEmployeeService {
 
     @Autowired
-    private ICompanyDAO companyDAO;
+    private ICompanyRepository companyRepository;
 
     @Autowired
-    private IEmployeeDAO employeeDAO;
+    private IEmployeeRepository employeeRepository;
 
     @Override
     public List<EmployeeDTOFull> getEmployeeList() {
         List<EmployeeDTOFull> transformedList = new ArrayList<>();
 
-        for (EmployeeEntity employee : employeeDAO.getEmployeeList()) {
-            transformedList.add(transformEmployeeEntityToDTO(employee));
+        for (EmployeeEntity employee : employeeRepository.findAll()) {
+            EmployeeDTOFull employeeDTO = transformEmployeeEntityToDTO(employee);
+
+            transformedList.add(employeeDTO);
         }
 
         return transformedList;
@@ -40,17 +42,18 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public EmployeeDTOFull getEmployeeById(final int id) {
-        return transformEmployeeEntityToDTO(employeeDAO.getEmployeeById(id));
+        return transformEmployeeEntityToDTO(employeeRepository.findOne(id));
     }
 
     @Override
     public List<EmployeeDTOFull> getEmployeesListById(final int id) {
-        CompanyEntity targetCompany = companyDAO.getCompanyById(id);
+        CompanyEntity targetCompany = companyRepository.findOne(id);
 
         List<EmployeeDTOFull> employeesDTOList = new ArrayList<>();
 
         for (EmployeeEntity employee : targetCompany.getEmployees()) {
-            employeesDTOList.add(transformEmployeeEntityToDTO(employee));
+            EmployeeDTOFull employeeDTO = transformEmployeeEntityToDTO(employee);
+            employeesDTOList.add(employeeDTO);
         }
 
         return employeesDTOList;
@@ -58,10 +61,14 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public EmployeeDTOFull saveEmployee(final EmployeeDTOFull employee) {
-        employeeDAO.saveEmployee(transformEmployeeDTOToEntity(employee));
+        EmployeeEntity employeeEntity = transformEmployeeDTOToEntity(employee);
+
+        employeeRepository.save(employeeEntity);
+
         return employee;
     }
 
+    /*TODO implement it*/
     @Override
     public EmployeeDTOFull saveEmployeeToCompany(final int company_id, final EmployeeDTOFull employee) {
         return null;
@@ -69,13 +76,15 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public EmployeeDTOFull removeEmployee(final int id) {
-        employeeDAO.removeEmployee(id);
+        employeeRepository.delete(id);
 
         return getEmployeeById(id);
     }
 
     @Override
-    public boolean isEmployeeExist(final EmployeeDTOFull employee) {
-        return employeeDAO.isEmployeeExist(transformEmployeeDTOToEntity(employee));
+    public boolean isExist(final EmployeeDTOFull employee) {
+        EmployeeEntity employeeEntity = transformEmployeeDTOToEntity(employee);
+
+        return employeeRepository.isExist(employeeEntity);
     }
 }

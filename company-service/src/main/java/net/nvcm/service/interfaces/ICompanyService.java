@@ -22,5 +22,5 @@ public interface ICompanyService {
 
     CompanyDTOFull removeCompany(final int id);
 
-    boolean isCompanyExist(final CompanyDTOFull company);
+    boolean isExist(final CompanyDTOFull company);
 }
