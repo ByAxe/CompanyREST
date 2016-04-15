@@ -28,14 +28,6 @@ public class CompanyEntity extends AbstractEntity implements Serializable {
         this.slogan = slogan;
     }
 
-/*    @Override
-    @Id
-    @SequenceGenerator(name = "company_seq", sequenceName = "companies_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "company_seq")
-    public Integer getId() {
-        return super.getId();
-    }*/
-
     @Column(name = "title")
     public String getTitle() {
         return title;
@@ -85,5 +77,21 @@ public class CompanyEntity extends AbstractEntity implements Serializable {
 
     public void setChildren(Set<CompanyEntity> children) {
         this.children = children;
+    }
+
+    public void addEmployee(EmployeeEntity employee){
+        if(employees.contains(employee)) return;
+
+        employees.add(employee);
+
+        employee.startWork(this);
+    }
+
+    public void removeEmployee(EmployeeEntity employee){
+        if (!employees.contains(employee)) return;
+
+        employees.remove(employee);
+
+        employee.stopWork(this);
     }
 }

@@ -1,13 +1,15 @@
 package net.nvcm.service.implementation;
 
+import com.google.common.base.Optional;
 import net.nvcm.core.dto.EmployeeDTOFull;
-import net.nvcm.repository.interfaces.ICompanyRepository;
-import net.nvcm.repository.interfaces.IEmployeeRepository;
 import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
+import net.nvcm.repository.interfaces.CompanyRepository;
+import net.nvcm.repository.interfaces.EmployeeRepository;
 import net.nvcm.service.interfaces.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,13 +21,14 @@ import static net.nvcm.service.EmployeeTransformer.transformEmployeeEntityToDTO;
  * Created by byaxe on 4/8/16.
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class EmployeeServiceImpl implements IEmployeeService {
 
     @Autowired
-    private ICompanyRepository companyRepository;
+    private CompanyRepository companyRepository;
 
     @Autowired
-    private IEmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
 
     @Override
     public List<EmployeeDTOFull> getEmployeeList() {
@@ -42,7 +45,14 @@ public class EmployeeServiceImpl implements IEmployeeService {
 
     @Override
     public EmployeeDTOFull getEmployeeById(final int id) {
-        return transformEmployeeEntityToDTO(employeeRepository.findOne(id));
+        EmployeeDTOFull employeeDTO = null;
+
+        try {
+            employeeDTO = transformEmployeeEntityToDTO(employeeRepository.findOne(id));
+        } catch (NullPointerException ignored) {
+        }
+
+        return employeeDTO;
     }
 
     @Override
@@ -68,17 +78,38 @@ public class EmployeeServiceImpl implements IEmployeeService {
         return employee;
     }
 
-    /*TODO implement it*/
     @Override
-    public EmployeeDTOFull saveEmployeeToCompany(final int company_id, final EmployeeDTOFull employee) {
-        return null;
+    public EmployeeDTOFull saveEmployeeToCompany(final int company_id, final int employee_id) {
+        EmployeeEntity employeeEntity = employeeRepository.saveEmployeeToCompany(company_id, employee_id);
+
+        return transformEmployeeEntityToDTO(employeeEntity);
     }
 
     @Override
     public EmployeeDTOFull removeEmployee(final int id) {
+        EmployeeDTOFull removedEmployee = getEmployeeById(id);
+
         employeeRepository.delete(id);
 
-        return getEmployeeById(id);
+        return removedEmployee;
+    }
+
+    @Override
+    public EmployeeDTOFull updateEmployee(final int id, final EmployeeDTOFull employee) {
+
+        EmployeeEntity employeeEntity = employeeRepository.findOne(id);
+
+        Optional<String> name = Optional.fromNullable(employee.getName());
+        Optional<String> position = Optional.fromNullable(employee.getPosition());
+        Optional<String> sex = Optional.fromNullable(employee.getSex());
+        Optional<Integer> age = Optional.fromNullable(employee.getAge());
+
+        if (name.isPresent()) employeeEntity.setName(name.get());
+        if (position.isPresent()) employeeEntity.setPosition(position.get());
+        if (sex.isPresent()) employeeEntity.setSex(sex.get());
+        if (age.isPresent()) employeeEntity.setAge(age.get());
+
+        return employee;
     }
 
     @Override

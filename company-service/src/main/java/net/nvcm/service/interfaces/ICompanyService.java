@@ -1,7 +1,7 @@
 package net.nvcm.service.interfaces;
 
 import net.nvcm.core.dto.CompanyDTOFull;
-import net.nvcm.entities.CompanyEntity;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 
@@ -18,9 +18,12 @@ public interface ICompanyService {
 
     CompanyDTOFull saveCompany(final CompanyDTOFull company);
 
-    CompanyEntity saveCompanyToEmployee(final int employee_id, final CompanyDTOFull company);
+    CompanyDTOFull saveCompanyToEmployee(final int employee_id, final int company_id);
 
     CompanyDTOFull removeCompany(final int id);
+
+    @Modifying
+    CompanyDTOFull updateCompany(final int id, final CompanyDTOFull company);
 
     boolean isExist(final CompanyDTOFull company);
 }

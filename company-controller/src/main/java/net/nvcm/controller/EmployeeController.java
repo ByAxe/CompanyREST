@@ -1,5 +1,6 @@
 package net.nvcm.controller;
 
+import com.google.common.base.Optional;
 import net.nvcm.core.dto.CompanyDTOFull;
 import net.nvcm.core.dto.EmployeeDTOFull;
 import net.nvcm.service.interfaces.ICompanyService;
@@ -21,7 +22,7 @@ public class EmployeeController {
 
     @Autowired
     private IEmployeeService employeeService;
-    
+
     @Autowired
     private ICompanyService companyService;
 
@@ -64,9 +65,7 @@ public class EmployeeController {
 
         headers.setLocation(builder.path("/employees/{id}").buildAndExpand(employee.getId()).toUri());
 
-        ResponseEntity<Void> responseEntity = new ResponseEntity<>(headers, HttpStatus.CREATED);
-
-        return responseEntity;
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     /**
@@ -98,19 +97,34 @@ public class EmployeeController {
     /**
      * Add company to employee
      */
-    @RequestMapping(value = "/employees/{employee_id}/companies", method = RequestMethod.PUT)
+    @RequestMapping(value = "/employees/{employee_id}/companies{company_id}", method = RequestMethod.PUT)
     public ResponseEntity<CompanyDTOFull> addCompanyToEmployee(
             @PathVariable("employee_id") final int employee_id,
-            @RequestBody CompanyDTOFull company, UriComponentsBuilder builder) {
+            @PathVariable("company_id") final int company_id, UriComponentsBuilder builder) {
 
-        companyService.saveCompanyToEmployee(employee_id, company);
+        companyService.saveCompanyToEmployee(employee_id, company_id);
 
         HttpHeaders headers = new HttpHeaders();
 
         headers.setLocation(builder.path("/employees/{employee_id}/companies/{company_id}")
-                .buildAndExpand(company.getId()).toUri());
+                .buildAndExpand(employee_id, company_id).toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
+    }
+
+    /**
+     * Update data about employee
+     */
+    @RequestMapping(value = "/employees/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<EmployeeDTOFull> updateEmployee(@PathVariable("id") final int id,
+                                                          @RequestBody EmployeeDTOFull employee) {
+        Optional<EmployeeDTOFull> employeeDTO = Optional.fromNullable(employeeService.getEmployeeById(id));
+
+        if (!employeeDTO.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        employeeService.updateEmployee(id, employee);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

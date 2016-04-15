@@ -1,20 +1,31 @@
 package net.nvcm.repository.implementation;
 
+import net.nvcm.entities.CompanyEntity;
 import net.nvcm.entities.EmployeeEntity;
 import net.nvcm.repository.GenericAbstractDAO;
-import net.nvcm.repository.interfaces.IEmployeeRepositoryCustom;
+import net.nvcm.repository.interfaces.CompanyRepository;
+import net.nvcm.repository.interfaces.EmployeeRepository;
+import net.nvcm.repository.interfaces.EmployeeRepositoryCustom;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by byaxe on 4/8/16.
  */
 @Repository
 @Transactional(readOnly = true)
-public class EmployeeRepositoryImpl extends GenericAbstractDAO implements IEmployeeRepositoryCustom {
+public class EmployeeRepositoryImpl extends GenericAbstractDAO implements EmployeeRepositoryCustom {
+
+    @Autowired
+    private CompanyRepository companyRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Override
     public boolean isExist(final EmployeeEntity employee) {
@@ -40,8 +51,15 @@ public class EmployeeRepositoryImpl extends GenericAbstractDAO implements IEmplo
     }
 
     @Override
-    public EmployeeEntity saveEmployeeToCompany(int company_id, final EmployeeEntity employee) {
-        return null;
+    @Transactional
+    public EmployeeEntity saveEmployeeToCompany(final int company_id, final int employee_id) {
+        CompanyEntity company = companyRepository.findOne(company_id);
+
+        EmployeeEntity employee = employeeRepository.findOne(employee_id);
+
+        company.addEmployee(employee);
+
+        return employee;
     }
 
     @Override

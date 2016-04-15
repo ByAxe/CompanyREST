@@ -1,6 +1,7 @@
 package net.nvcm.service.interfaces;
 
 import net.nvcm.core.dto.EmployeeDTOFull;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.util.List;
 
@@ -17,9 +18,12 @@ public interface IEmployeeService {
 
     EmployeeDTOFull saveEmployee(final EmployeeDTOFull employee);
 
-    EmployeeDTOFull saveEmployeeToCompany(final int company_id, final EmployeeDTOFull employee);
+    EmployeeDTOFull saveEmployeeToCompany(final int company_id, final int employee_id);
 
     EmployeeDTOFull removeEmployee(final int id);
+
+    @Modifying
+    EmployeeDTOFull updateEmployee(final int id, final EmployeeDTOFull employee);
 
     boolean isExist(final EmployeeDTOFull employee);
 

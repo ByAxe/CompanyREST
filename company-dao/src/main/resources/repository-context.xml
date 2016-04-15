@@ -51,4 +51,7 @@
 
 	<bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
 
+
+	<bean id="operationJDBCTemplate" class="net.nvcm.repository.implementation.OperationJDBCTemplate"
+		  p:dataSource-ref="dataSource"/>
 </beans>

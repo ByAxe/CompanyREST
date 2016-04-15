@@ -1,5 +1,6 @@
 package net.nvcm.controller;
 
+import com.google.common.base.Optional;
 import net.nvcm.core.dto.CompanyDTOFull;
 import net.nvcm.core.dto.EmployeeDTOFull;
 import net.nvcm.service.interfaces.ICompanyService;
@@ -65,9 +66,7 @@ public class CompanyController {
 
         headers.setLocation(builder.path("/companies/{id}").buildAndExpand(company.getId()).toUri());
 
-        ResponseEntity<Void> responseEntity = new ResponseEntity<>(headers, HttpStatus.CREATED);
-
-        return responseEntity;
+        return new ResponseEntity<>(headers, HttpStatus.CREATED);
     }
 
     /**
@@ -100,19 +99,34 @@ public class CompanyController {
     /**
      * Adding employee to company
      */
-    @RequestMapping(value = "/companies/{company_id}/employees", method = RequestMethod.PUT)
+    @RequestMapping(value = "/companies/{company_id}/employees/{employee_id}", method = RequestMethod.PUT)
     public ResponseEntity<EmployeeDTOFull> addEmployeeToCompany(
             @PathVariable("company_id") final int company_id,
-            @RequestBody EmployeeDTOFull employee, UriComponentsBuilder builder) {
+            @PathVariable("employee_id") int employee_id, UriComponentsBuilder builder) {
 
-        employeeService.saveEmployeeToCompany(company_id, employee);
+        employeeService.saveEmployeeToCompany(company_id, employee_id);
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setLocation(builder.path("/companies/{companies_id}/employees/{employees_id}")
-                .buildAndExpand(employee.getId()).toUri());
+        headers.setLocation(builder.path("/companies/{company_id}/employees/{employee_id}")
+                .buildAndExpand(company_id, employee_id).toUri());
 
         return new ResponseEntity<>(headers, HttpStatus.OK);
+    }
+
+    /**
+     * Update data about company
+     */
+    @RequestMapping(value = "/companies/{id}", method = RequestMethod.PUT)
+    public ResponseEntity<CompanyDTOFull> updateCompany(@PathVariable("id") final int id,
+                                                        @RequestBody CompanyDTOFull company) {
+        Optional<CompanyDTOFull> companyDTO = Optional.fromNullable(companyService.getCompanyById(id));
+
+        if (!companyDTO.isPresent()) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        companyService.updateCompany(id, company);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

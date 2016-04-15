@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by byaxe on 4/8/16.
  */
-public interface IEmployeeRepository extends JpaRepository<EmployeeEntity, Integer>, IEmployeeRepositoryCustom {
+public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Integer>, EmployeeRepositoryCustom {
 
     List<EmployeeEntity> findByName(final String name);
 
